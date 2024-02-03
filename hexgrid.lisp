@@ -4,7 +4,13 @@
 
 (eval-when (:load-toplevel :compile-toplevel :execute)
   (defclass cell ()
-    ((qrs :initarg :qrs :accessor qrs))))
+    ((qrs :initarg :qrs :accessor qrs)
+     (hexagon :initarg :hexagon :accessor hexagon)
+     (selected :initform nil :accessor selected-p)))
+
+  (defmethod print-object ((obj cell) stream)
+    (print-unreadable-object (obj stream :identity nil :type t)
+      (format stream "~A" (qrs obj)))))
 
 (defun q (cell)
   (vx (qrs cell)))
@@ -27,7 +33,7 @@
   (make-array 6 :initial-contents (list (make-cell  1  0 -1)
                                         (make-cell  1 -1  0)
                                         (make-cell  0 -1  1)
-                                        (make-cell -1  0 -1)
+                                        (make-cell -1  0 1)
                                         (make-cell -1  1  0)
                                         (make-cell  0  1 -1))))
 
@@ -136,6 +142,10 @@
   ((center :initarg :center :reader hexagon-center)
    (cell :initarg :cell :reader hexagon-cell)))
 
+(defmethod print-object ((obj hexagon) stream)
+  (print-unreadable-object (obj stream :identity nil :type t)
+    (format stream "~A" (qrs (hexagon-cell obj)))))
+
 (defgeneric draw (object &optional pane &rest drawing-options))
 
 (defmethod draw ((hexagon hexagon) &optional (pane *standard-output*) &rest drawing-options)
@@ -228,7 +238,15 @@
                    (s (list (genval 'q c1 v1 v2) (genval 'r c2 v2 v1) (- (+ v1 v2))))))))
       (loop for v1 from (- size) to size
             append (loop for v2 from (- size) to size
-                         collect (apply #'make-cell (gencoords v1 v2)))))))
+                         for cell = (apply #'make-cell (gencoords v1 v2))
+                         collect cell)))))
+
+(defmethod make-cells :around (type layout size &optional height coords)
+  (declare (ignore height coords size))
+  (let ((cells (call-next-method)))
+    (dolist (cell cells)
+      (setf (hexagon cell) (make-hexagon layout cell)))
+    cells))
 
 (defun make-hexgrid (layout type size &optional height coords)
   (case type
@@ -264,8 +282,16 @@
   (apply #'invoke-with-drawing-options pane
          (lambda (medium)
            (loop for cell in (cells grid)
-                 for hexagon = (make-hexagon (layout grid) cell)
+                 for hexagon = (hexagon cell)
                  do (present hexagon 'hexagon :stream medium)
                  if (draw-coords-p grid)
                    do (draw-coords hexagon medium)))
          drawing-options))
+
+(defgeneric neighbors (hexagon)
+  (:method ((hexagon hexagon))
+    (let ((neighbors (loop for direction from 0 below 6
+                           collect (cell-neighbor (hexagon-cell hexagon) direction))))
+      (remove-if-not (lambda (cell)
+                       (member cell neighbors :test #'equality))
+                     (cells (hexgrids-selected-grid *application-frame*))))))

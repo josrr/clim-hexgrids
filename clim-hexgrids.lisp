@@ -6,7 +6,7 @@
 
 (defparameter *graphical-view* (make-instance 'graphical-view))
 (defparameter *width* 1280)
-(defparameter *height* 1280)
+(defparameter *height* 1536)
 (defparameter *coords-style* (make-text-style :sans-serif :roman :tiny))
 
 (defun display-canvas (frame pane)
@@ -89,13 +89,13 @@
   (:layouts (default
              (vertically (:min-height *height* :max-height *height*
                           :min-width *width* :max-width *width*)
-               (7/8 (horizontally (:min-width (* 5/4 *width*) :max-width (* 5/4 *width*))
+               (12/16 (horizontally (:min-width (* 5/4 *width*) :max-width (* 5/4 *width*))
                       (1/5 (vertically ()
                              (labelling (:label "Type of grid") grids)
                              (labelling (:label "Type of layout") layouts)))
                       (4/5 (scrolling () canvas))))
                (make-pane 'clime:box-adjuster-gadget)
-               (1/8 interactor))))
+               (4/16 interactor))))
   (:menu-bar t)
   (:pointer-documentation t))
 
@@ -106,9 +106,11 @@
 
 (define-presentation-method present (obj (type hexagon) stream (view graphical-view)
                                          &key &allow-other-keys)
-  (draw obj stream :ink (if (and (zerop (q (hexagon-cell obj))) (zerop (r (hexagon-cell obj))))
-                            +gray90+ +white+)
-                   :filled t :line-thickness 3.0)
+  (let ((cell (hexagon-cell obj)))
+    (draw obj stream :ink (if (selected-p cell) +cyan+
+                              (if (and (zerop (q cell)) (zerop (r cell)))
+                                  +gray90+ +white+))
+                     :filled t :line-thickness 3.0))
   (draw obj stream :ink +black+ :filled nil :line-thickness 3.0))
 
 (define-hexgrids-command (com-redraw :name "Redraw" :menu t) ()
@@ -127,13 +129,30 @@
   (setf (hexgrids-selected-layout *application-frame*) obj
         (pane-needs-redisplay (find-pane-named *application-frame* 'canvas)) t))
 
-(define-presentation-to-command-translator show-hexagon
+(define-hexgrids-command (com-show-cell-neighbors :name "Show cell neighbors") ((hexagon 'hexagon))
+
+  (let ((frame *application-frame*))
+    (dolist (cell (cells (hexgrids-selected-grid frame)))
+      (setf (selected-p cell) nil))
+    (dolist (cell (neighbors hexagon))
+      (setf (selected-p cell) t))
+    (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
+
+(define-presentation-to-command-translator show-cell-neighbors
+    (hexagon com-show-cell-neighbors hexgrids
+     :gesture :select
+     :documentation ""
+     :echo nil)
+    (object)
+  (list object))
+
+#|(define-presentation-to-command-translator show-hexagon
     (hexagon com-show-details hexgrids
      :gesture :select
      :documentation "Show details"
      :echo nil)
     (object)
-  (list object))
+  (list object))|#
 
 (defun start ()
   (find-application-frame 'hexgrids))
