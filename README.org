@@ -19,15 +19,15 @@ using [[https://mcclim.common-lisp.dev/][McCLIM]].
 
 #+NAME:   fig:sc01
 #+ATTR_HTML: :class img-responsive centered
+[[./001.png]]
+
+#+NAME:   fig:sc01
+#+ATTR_HTML: :class img-responsive centered
 [[./002.png]]
 
 #+NAME:   fig:sc01
 #+ATTR_HTML: :class img-responsive centered
 [[./003.png]]
-
-#+NAME:   fig:sc01
-#+ATTR_HTML: :class img-responsive centered
-[[./004.png]]
 
 * How to run the program
 
