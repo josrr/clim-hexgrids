@@ -11,7 +11,7 @@
 #+HTML_LINK_HOME: https://www.rufina.link/clim-hexgrids
 #+HTML_LINK_UP: https://www.rufina.link/
 
-This is an implementation of some of the algoriths described in
+This is an implementation of some of the algorithms described in
 [[https://www.redblobgames.com/grids/hexagons/][Hexagonal Grids]]
 using [[https://mcclim.common-lisp.dev/][McCLIM]].
 
