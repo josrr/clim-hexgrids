@@ -63,7 +63,8 @@
 
 (defgeneric len (a)
   (:method ((a cell))
-    (truncate (+ (abs (vx a)) (abs (vy a)) (abs (vz a))) 2)))
+    (let ((qrs (qrs a)))
+     (truncate (+ (abs (vx qrs)) (abs (vy qrs)) (abs (vz qrs))) 2))))
 
 (defgeneric distance (a b)
   (:method ((a cell) (b cell))
