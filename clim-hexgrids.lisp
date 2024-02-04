@@ -130,7 +130,6 @@
         (pane-needs-redisplay (find-pane-named *application-frame* 'canvas)) t))
 
 (define-hexgrids-command (com-show-cell-neighbors :name "Show cell neighbors") ((hexagon 'hexagon))
-
   (let ((frame *application-frame*))
     (dolist (cell (cells (hexgrids-selected-grid frame)))
       (setf (selected-p cell) nil))
