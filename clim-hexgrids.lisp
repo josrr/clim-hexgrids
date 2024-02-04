@@ -138,6 +138,24 @@
       (setf (selected-p cell) t))
     (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
 
+(define-hexgrids-command (com-distance-between-cells :name "Calculate distance between cells")
+    ((a 'hexagon) (b 'hexagon))
+  (let ((frame *application-frame*))
+    (format (frame-query-io frame) "~D~%" (distance (hexagon-cell a) (hexagon-cell b)))))
+
+(define-hexgrids-command (com-cells-at-the-same-distance :name "Cells at the same distance")
+    ((a 'hexagon) (b 'hexagon))
+  (let* ((frame *application-frame*)
+         (cell (hexagon-cell a))
+         (distance (distance cell (hexagon-cell b))))
+    (dolist (cell (cells (hexgrids-selected-grid frame)))
+      (setf (selected-p cell) nil))
+    (dolist (cell (remove-if (lambda (b)
+                               (/= (distance cell b) distance))
+                             (cells (hexgrids-selected-grid frame))))
+      (setf (selected-p cell) t))
+    (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
+
 (define-presentation-to-command-translator show-cell-neighbors
     (hexagon com-show-cell-neighbors hexgrids
      :gesture :select
