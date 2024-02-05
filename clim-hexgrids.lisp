@@ -129,12 +129,21 @@
   (setf (hexgrids-selected-layout *application-frame*) obj
         (pane-needs-redisplay (find-pane-named *application-frame* 'canvas)) t))
 
+(defun hexgrid-select-cells (frame cells)
+  (dolist (cell (cells (hexgrids-selected-grid frame)))
+    (setf (selected-p cell) nil))
+  (dolist (cell cells)
+    (setf (selected-p cell) t)))
+
 (define-hexgrids-command (com-show-cell-neighbors :name "Show cell neighbors") ((hexagon 'hexagon))
   (let ((frame *application-frame*))
-    (dolist (cell (cells (hexgrids-selected-grid frame)))
-      (setf (selected-p cell) nil))
-    (dolist (cell (neighbors hexagon))
-      (setf (selected-p cell) t))
+    (hexgrid-select-cells frame (neighbors hexagon))
+    (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
+
+(define-hexgrids-command (com-show-diagonal-cell-neighbors :name "Show diagonal cell neighbors")
+    ((hexagon 'hexagon))
+  (let ((frame *application-frame*))
+    (hexgrid-select-cells frame (diagonal-neighbors hexagon))
     (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
 
 (define-hexgrids-command (com-distance-between-cells :name "Calculate distance between cells")
@@ -147,19 +156,26 @@
   (let* ((frame *application-frame*)
          (cell (hexagon-cell a))
          (distance (distance cell (hexagon-cell b))))
-    (dolist (cell (cells (hexgrids-selected-grid frame)))
-      (setf (selected-p cell) nil))
-    (dolist (cell (remove-if (lambda (b)
-                               (/= (distance cell b) distance))
-                             (cells (hexgrids-selected-grid frame))))
-      (setf (selected-p cell) t))
+    (hexgrid-select-cells frame (remove-if (lambda (b)
+                                             (/= (distance cell b) distance))
+                                           (cells (hexgrids-selected-grid frame))))
     (setf (pane-needs-redisplay (find-pane-named frame 'canvas)) t)))
 
 (define-presentation-to-command-translator show-cell-neighbors
     (hexagon com-show-cell-neighbors hexgrids
      :gesture :select
-     :documentation ""
-     :echo nil)
+     :documentation "Cell neighbors"
+     :echo t
+     :menu t)
+    (object)
+  (list object))
+
+(define-presentation-to-command-translator show-diagonal-cell-neighbors
+    (hexagon com-show-diagonal-cell-neighbors hexgrids
+     :gesture :describe
+     :documentation "Diagonal cell neighbors"
+     :echo t
+     :menu t)
     (object)
   (list object))
 

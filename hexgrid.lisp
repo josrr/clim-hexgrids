@@ -296,3 +296,12 @@
       (remove-if-not (lambda (cell)
                        (member cell neighbors :test #'equality))
                      (cells (hexgrids-selected-grid *application-frame*))))))
+
+(defgeneric diagonal-neighbors (hexagon)
+  (:method ((hexagon hexagon))
+    (let ((neighbors (loop for direction from 0 below 6
+                           collect (cell-diagonal-neighbor (hexagon-cell hexagon)
+                                                           direction))))
+      (remove-if-not (lambda (cell)
+                       (member cell neighbors :test #'equality))
+                     (cells (hexgrids-selected-grid *application-frame*))))))
