@@ -10,11 +10,10 @@
 (defparameter *coords-style* (make-text-style :sans-serif :roman :tiny))
 
 (defun display-canvas (frame pane)
-  (let ((*standard-output* pane)
-        (layout (hexgrids-selected-layout frame)))
-    (with-bounding-rectangle* (x0 y0 x1 y1) pane
-      (setf (layout-origin layout) (vec2 (/ (- x1 x0) 2) (/ (- y1 y0) 2))))
-    (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*)))
+  (with-bounding-rectangle* (x0 y0 x1 y1) pane
+    (setf (layout-origin (hexgrids-selected-layout frame))
+          (vec2 (/ (- x1 x0) 2) (/ (- y1 y0) 2))))
+  (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*))
 
 (defparameter *grids* '((parallelogram (q r)) (parallelogram (s q))
                         (parallelogram (r s)) hexagonal triangular rectangular))
