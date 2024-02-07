@@ -10,7 +10,6 @@
 (defparameter *coords-style* (make-text-style :sans-serif :roman :tiny))
 
 (defun display-canvas (frame pane)
-  (window-clear pane)
   (let ((*standard-output* pane)
         (layout (hexgrids-selected-layout frame)))
     (with-bounding-rectangle* (x0 y0 x1 y1) pane
