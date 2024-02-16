@@ -11,14 +11,14 @@
 
 (defun display-canvas (frame pane)
   (with-bounding-rectangle* (x0 y0 x1 y1) pane
-    (setf (layout-origin (hexgrids-selected-layout frame))
-          (vec2 (/ (- x1 x0) 2) (/ (- y1 y0) 2))))
-  (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*))
+    (with-drawing-options (pane :transformation (make-translation-transformation (/ (- x1 x0) 2)
+                                                                                 (/ (- y1 y0) 2)))
+      (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*))))
 
 (defparameter *grids* '((parallelogram (q r)) (parallelogram (s q))
                         (parallelogram (r s)) hexagonal triangular rectangular))
 
-(defun make-selected-grid (type layout &optional frame)
+(defun make-selected-grid (frame &optional type layout)
   (let ((type (or type (gadget-value (find-pane-named frame 'grids)))))
     (make-hexgrid (or layout (hexgrids-selected-layout frame))
                   (if (listp type) (first type) type)
@@ -28,7 +28,7 @@
   (declare (ignore gadget))
   (let ((frame *application-frame*))
     (execute-frame-command frame (list 'com-change-grid
-                                       (make-selected-grid value nil frame)))))
+                                       (make-selected-grid frame value)))))
 
 (defun change-layout (gadget value)
   (declare (ignore gadget))
@@ -36,22 +36,18 @@
     (setf (hexgrids-selected-layout *application-frame*) (find value (hexgrids-grid-layouts frame)
                                                                :key #'layout-name))
     (execute-frame-command frame (list 'com-change-grid
-                                       (make-selected-grid nil nil frame)))))
+                                       (make-selected-grid frame)))))
 
 (define-application-frame hexgrids ()
   ((grid-layouts :initarg :hex-layouts
                  :initform (list (make-instance 'layout
                                                 :name 'flat
                                                 :orientation +orientation-flat+
-                                                :size (vec2 40.0 40.0)
-                                                :origin (vec2 (/ *width* 2)
-                                                              (/ *height* 2)))
+                                                :size (vec2 40.0 40.0))
                                  (make-instance 'layout
                                                 :name 'pointy
                                                 :orientation +orientation-pointy+
-                                                :size (vec2 40.0 40.0)
-                                                :origin (vec2 (/ *width* 2)
-                                                              (/ *height* 2))))
+                                                :size (vec2 40.0 40.0)))
                  :reader hexgrids-grid-layouts)
    (grids :initarg :grids
           :initform *grids*
@@ -175,13 +171,12 @@
     (object)
   (list object))
 
-#|(define-presentation-to-command-translator show-hexagon
-    (hexagon com-show-details hexgrids
-     :gesture :select
-     :documentation "Show details"
-     :echo nil)
-    (object)
-  (list object))|#
+#|(define-drag-and-drop-translator show-cells-at-same-distance
+    (hexagon command hexagon hexgrids)
+    (object destination-object)
+  (if (not (eq object destination-object))
+      `(com-cells-at-the-same-distance ,object ,destination-object)
+      `(com-show-cell-neighbors ,object)))|#
 
 (defun start ()
   (find-application-frame 'hexgrids))
