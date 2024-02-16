@@ -248,15 +248,28 @@
       (setf (hexagon cell) (make-hexagon layout cell)))
     cells))
 
+(define-condition hexgrid-error (error)
+  ((type :initarg :type :initform nil :reader hexgrid-error-type))
+  (:report (lambda (condition stream)
+             (format stream "There is a problem with the hexgrid ~A"
+                     (hexgrid-error-type condition)))))
+
+(define-condition hexgrid-type-not-available-error (hexgrid-error) ()
+  (:report (lambda (condition stream)
+             (format stream "The hexgrid type ~A is not avaliable"
+                     (hexgrid-error-type condition)))))
+
 (defun make-hexgrid (layout type size &optional height coords)
   (case type
     (parallelogram (make-instance type
                                   :coords coords
                                   :layout layout
                                   :cells (make-cells type layout size height coords)))
-    (t (make-instance type
-                      :layout layout
-                      :cells (make-cells type layout size height coords)))))
+    ((rectangular triangular hexagonal) (make-instance type
+                                                       :layout layout
+                                                       :cells (make-cells type layout
+                                                                          size height coords)))
+    (t (error 'hexgrid-type-not-available-error :type type))))
 
 (defun make-hexagonal-grid (layout size)
   (make-instance 'hexagonal
