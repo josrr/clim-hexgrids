@@ -60,7 +60,7 @@
                   :accessor hexgrids-selected-grid)
    (selected-layout :initarg :selected-layout
                     :accessor hexgrids-selected-layout))
-  (:panes (grids (make-pane 'list-pane
+  (:panes (grids (make-pane 'option-pane
                             :name 'grids
                             :value (first *grids*)
                             :name-key (lambda (x)
@@ -70,7 +70,7 @@
                             :items *grids*
                             :value-changed-callback 'change-grid
                             :test 'eq))
-          (layouts (make-pane 'list-pane
+          (layouts (make-pane 'option-pane
                               :name 'layouts
                               :value 'flat
                               :name-key 'string-capitalize
