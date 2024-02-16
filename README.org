@@ -29,6 +29,10 @@ using [[https://mcclim.common-lisp.dev/][McCLIM]].
 #+ATTR_HTML: :class img-responsive centered
 [[./003.png]]
 
+#+NAME:   fig:sc01
+#+ATTR_HTML: :class img-responsive centered
+[[./004.png]]
+
 * How to run the program
 
 To run the program, clone [[https://github.com/josrr/clim-hexgrids][this]] repository in your Quicklisp
