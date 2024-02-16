@@ -10,24 +10,10 @@
 
   (defmethod print-object ((obj cell) stream)
     (print-unreadable-object (obj stream :identity nil :type t)
-      (format stream "~A" (qrs obj)))))
+      (format stream "~A" (qrs obj))))
 
-(defun q (cell)
-  (vx (qrs cell)))
-
-(defun r (cell)
-  (vy (qrs cell)))
-
-(defun s (cell)
-  (vz (qrs cell)))
-
-(eval-when (:load-toplevel :compile-toplevel :execute)
   (defun make-cell (q r &optional s)
     (make-instance 'cell :qrs (vec3 q r (if s s (- (+ q r)))))))
-
-(defgeneric format-cell (cell)
-  (:method ((cell cell))
-    (format nil "~d,~d,~d" (truncate (q cell)) (truncate (r cell)) (truncate (s cell)))))
 
 (defconstant +cell-directions+
   (make-array 6 :initial-contents (list (make-cell  1  0 -1)
@@ -44,6 +30,19 @@
                                         (make-cell -2 +1 +1)
                                         (make-cell -1 +2 -1)
                                         (make-cell +1 +1 -2))))
+
+(defun q (cell)
+  (vx (qrs cell)))
+
+(defun r (cell)
+  (vy (qrs cell)))
+
+(defun s (cell)
+  (vz (qrs cell)))
+
+(defgeneric format-cell (cell)
+  (:method ((cell cell))
+    (format nil "~d,~d,~d" (truncate (q cell)) (truncate (r cell)) (truncate (s cell)))))
 
 (defgeneric equality (a b)
   (:method ((a cell) (b cell))
@@ -118,7 +117,7 @@
   ((name :initarg :name :reader layout-name)
    (orientation :initarg :orientation :reader layout-orientation)
    (size :initarg :size :reader layout-size)
-   (origin :initarg :origin :accessor layout-origin)))
+   (origin :initarg :origin :initform (vec2 0 0) :accessor layout-origin)))
 
 (defmethod print-object ((obj layout) stream)
   (print-unreadable-object (obj stream :identity nil :type t)
