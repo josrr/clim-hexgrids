@@ -87,20 +87,18 @@
   (:layouts (default
              (vertically (:min-height *height* :max-height *height*
                           :min-width *width* :max-width *width*)
-               (12/16 (horizontally (:min-width (* 5/4 *width*) :max-width (* 5/4 *width*))
-                      (1/5 (vertically ()
-                             (labelling (:label "Type of grid") grids)
-                             (labelling (:label "Type of layout") layouts)))
-                      (4/5 (scrolling () canvas))))
+               (1/16 (horizontally ()
+                       (labelling (:label "Type of grid") grids)
+                       (labelling (:label "Type of layout") layouts)))
+               (13/16 (scrolling () canvas))
                (make-pane 'clime:box-adjuster-gadget)
-               (4/16 interactor))))
+               (1/8 interactor))))
   (:menu-bar t)
   (:pointer-documentation t))
 
 (defmethod run-frame-top-level :before ((frame hexgrids) &key &allow-other-keys)
   (setf (hexgrids-selected-layout frame) (first (hexgrids-grid-layouts frame))
-        (hexgrids-selected-grid frame) (make-selected-grid (first (hexgrids-grids frame))
-                                                           (first (hexgrids-grid-layouts frame)))))
+        (hexgrids-selected-grid frame) (make-selected-grid frame)))
 
 (define-presentation-method present (obj (type hexagon) stream (view graphical-view)
                                          &key &allow-other-keys)
