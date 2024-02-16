@@ -317,3 +317,17 @@
       (remove-if-not (lambda (cell)
                        (member cell neighbors :test #'equality))
                      (cells (hexgrids-selected-grid *application-frame*))))))
+
+(defgeneric width (hexgrid)
+  (:method ((hexgrid hexgrid))
+    (let ((x (mapcan (lambda (x)
+                       (mapcar #'point-x (polygon-points (hexagon x))))
+                     (cells hexgrid))))
+      (- (apply #'max x) (apply #'min x)))))
+
+(defgeneric height (hexgrid)
+  (:method ((hexgrid hexgrid))
+    (let ((y (mapcan (lambda (x)
+                       (mapcar #'point-y (polygon-points (hexagon x))))
+                     (cells hexgrid))))
+      (- (apply #'max y) (apply #'min y)))))
