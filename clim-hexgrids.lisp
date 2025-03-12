@@ -171,12 +171,12 @@
     (object)
   (list object))
 
-#|(define-drag-and-drop-translator show-cells-at-same-distance
+(define-drag-and-drop-translator show-cells-at-same-distance
     (hexagon command hexagon hexgrids)
     (object destination-object)
   (if (not (eq object destination-object))
       `(com-cells-at-the-same-distance ,object ,destination-object)
-      `(com-show-cell-neighbors ,object)))|#
+      `(com-show-cell-neighbors ,object)))
 
 (defun start ()
   (find-application-frame 'hexgrids))
