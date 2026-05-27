@@ -155,11 +155,11 @@
   (:method ((hexagon hexagon) &optional (pane *standard-output*) &rest drawing-options)
     (let ((center (hexagon-center hexagon))
           (text (format-cell (hexagon-cell hexagon))))
-      (multiple-value-bind (text-w text-h) (text-size pane text)
-        (apply #'draw-text* pane text
-               (- (point-x center) (/ text-w 2.0))
-               (+ (point-y center) (/ text-h 2.0))
-               drawing-options)))))
+      (apply #'clim:invoke-with-drawing-options pane
+             (lambda (medium)
+               (draw-text* medium text (point-x center) (point-y center)
+                           :align-x :center :align-y :center))
+             drawing-options))))
 
 (defgeneric make-hexagon (layout cell)
   (:method ((layout layout) (cell cell))
