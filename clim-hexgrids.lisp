@@ -5,8 +5,8 @@
 (defclass graphical-view (view) ())
 
 (defparameter *graphical-view* (make-instance 'graphical-view))
-(defparameter *width* 1280)
-(defparameter *height* 1536)
+(defparameter *width* 1024)
+(defparameter *height* 1024)
 (defparameter *coords-style* (make-text-style :sans-serif :roman :tiny))
 
 (defun display-canvas (frame pane)
@@ -43,11 +43,11 @@
                  :initform (list (make-instance 'layout
                                                 :name 'flat
                                                 :orientation +orientation-flat+
-                                                :size (vec2 40.0 40.0))
+                                                :size (vec2 25.0 25.0))
                                  (make-instance 'layout
                                                 :name 'pointy
                                                 :orientation +orientation-pointy+
-                                                :size (vec2 40.0 40.0)))
+                                                :size (vec2 25.0 25.0)))
                  :reader hexgrids-grid-layouts)
    (grids :initarg :grids
           :initform *grids*
@@ -56,6 +56,7 @@
                   :accessor hexgrids-selected-grid)
    (selected-layout :initarg :selected-layout
                     :accessor hexgrids-selected-layout))
+  (:reinitialize-frames t)
   (:panes (grids (make-pane 'option-pane
                             :name 'grids
                             :value (first *grids*)
