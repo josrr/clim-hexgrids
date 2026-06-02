@@ -31,6 +31,8 @@
                                         (make-cell -1 +2 -1)
                                         (make-cell +1 +1 -2))))
 
+(declaim (inline q r s))
+
 (defun q (cell)
   (vx (qrs cell)))
 
@@ -62,8 +64,7 @@
 
 (defgeneric len (a)
   (:method ((a cell))
-    (let ((qrs (qrs a)))
-     (truncate (+ (abs (vx qrs)) (abs (vy qrs)) (abs (vz qrs))) 2))))
+    (truncate (+ (abs (q a)) (abs (r a)) (abs (s a))) 2)))
 
 (defgeneric distance (a b)
   (:method ((a cell) (b cell))
