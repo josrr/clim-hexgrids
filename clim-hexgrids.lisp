@@ -11,9 +11,9 @@
 
 (defun display-canvas (frame pane)
   (with-bounding-rectangle* (x0 y0 x1 y1) pane
-    (with-drawing-options (pane :transformation (make-translation-transformation (/ (- x1 x0) 2)
-                                                                                 (/ (- y1 y0) 2)))
-      (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*))))
+    (draw (hexgrids-selected-grid frame) pane :text-style *coords-style*
+                                              :transformation (make-translation-transformation (/ (- x1 x0) 2)
+                                                                                               (/ (- y1 y0) 2)))))
 
 (defparameter *grids* '((parallelogram (q r)) (parallelogram (s q))
                         (parallelogram (r s)) hexagonal triangular rectangular))
