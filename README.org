@@ -15,6 +15,10 @@ This is an implementation of some of the algorithms described in
 [[https://www.redblobgames.com/grids/hexagons/][Hexagonal Grids]]
 using [[https://mcclim.common-lisp.dev/][McCLIM]].
 
+ - *Important* :: The repository on GitHub will no longer receive
+   updates. The new home for this project is
+   [[https://codeberg.org/joserr/clim-hexgrids][Codeberg]].
+
 * Screenshots
 
 #+NAME:   fig:sc01
@@ -35,12 +39,12 @@ using [[https://mcclim.common-lisp.dev/][McCLIM]].
 
 * How to run the program
 
-To run the program, clone [[https://github.com/josrr/clim-hexgrids][this]] repository in your Quicklisp
+To run the program, clone [[https://codeberg.org/joserr/clim-hexgrids.git][this]] repository in your Quicklisp
 =local-projects= directory
 
 #+BEGIN_SRC
  $ cd ~/quicklisp/local-projects/
- $ git clone https://github.com/josrr/clim-hexgrids.git
+ $ git clone https://codeberg.org/joserr/clim-hexgrids.git
 #+END_SRC
 
 then:
