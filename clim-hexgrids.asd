@@ -6,8 +6,8 @@
   :license "GPL Ver. 3"
   :version "0.0.1"
   :serial t
-  :depends-on (#:3d-matrices
-               #:mcclim)
+  :depends-on (#:mcclim)
   :components ((:file "package")
+               (:file "operations")
                (:file "hexgrid")
                (:file "clim-hexgrids")))

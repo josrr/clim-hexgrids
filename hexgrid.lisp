@@ -135,7 +135,7 @@
 (defgeneric point-to-cell (p layout)
   (:method ((p point) (layout layout))
     (let ((qr (m* (orientation-b (layout-orientation layout))
-                  (v/ (v- (vec (point-x p) (point-y p)) (layout-origin layout))
+                  (v/ (v- (vec2 (point-x p) (point-y p)) (layout-origin layout))
                       (layout-size layout)))))
       (make-cell (vx qr) (vy qr)))))
 
