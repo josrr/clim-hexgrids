@@ -1,4 +1,5 @@
 ;;;; hexgrid.lisp
+;;;; Copyright © 2026 José M. Á. Ronquillo Rivera
 
 (in-package #:clim-hexgrids)
 

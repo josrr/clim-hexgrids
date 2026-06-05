@@ -1,4 +1,5 @@
 ;;;; clim-hexgrids.asd
+;;;; Copyright © 2026 José M. Á. Ronquillo Rivera
 
 (asdf:defsystem #:clim-hexgrids
   :description "Implementation of Hex Grids using McCLim"
